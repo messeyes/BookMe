@@ -1,9 +1,14 @@
 package com.example.bookMe.domain;
 
+import com.example.bookMe.repository.entity.EmprestimoEntity;
+
+import java.math.BigDecimal;
+
 public record Multa(
         Long id,
-        boolean atraso,
-        boolean perca,
-        boolean danificado
+        EmprestimoEntity emprestimo,
+        BigDecimal valor,
+        boolean pago,
+        String tipo
 ) {
 }
