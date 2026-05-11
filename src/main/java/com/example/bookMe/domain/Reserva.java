@@ -7,7 +7,7 @@ public record Reserva(
         Long idUsuario,
         Long idLivro,
         Instant dataReserva,
-        boolean status,
+        String status,
         int ordemFila
 ) {
 }

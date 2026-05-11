@@ -1,9 +1,6 @@
 package com.example.bookMe.repository.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -19,23 +16,30 @@ public class ReservaEntity {
     @GeneratedValue
     private Long id;
 
-    @NonNull
-    @Column(nullable = false)
-    private Long idUsuario;
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private UsuarioEntity usuario;
 
-    @NonNull
-    @Column(nullable = false)
-    private Long idLivro;
+    @ManyToOne
+    @JoinColumn(name = "id_livro",nullable = false)
+    private LivroEntity livro;
 
-    @NonNull
     @Column(nullable = false)
     private Instant dataReserva;
 
-    @NonNull
     @Column(nullable = false)
-    private boolean status;
+    private String status;
 
-    @NonNull
     @Column(nullable = false)
     private int ordemFila;
+
+    public ReservaEntity(){}
+
+    public ReservaEntity(UsuarioEntity usuario, LivroEntity livro, int ordemFila){
+        this.usuario = usuario;
+        this.livro = livro;
+        this.dataReserva = Instant.now();
+        this.status = "PENDENTE";
+        this.ordemFila = ordemFila;
+    }
 }
