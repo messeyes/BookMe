@@ -16,8 +16,8 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public UsuarioEntity criar(Usuario usuario){
-        return usuarioRepository.save(new UsuarioEntity(usuario));
+    public UsuarioEntity criar(Usuario request){
+        return usuarioRepository.save(new UsuarioEntity(request));
     }
 
     public UsuarioEntity buscarPorId(Long id){
@@ -36,7 +36,7 @@ public class UsuarioService {
         usuario.email();
         usuario.senha();
         usuario.dataCadastro();
-        usuario.idCargo();
+        usuario.cargo();
 
         return usuarioRepository.save(new UsuarioEntity(usuario));
     }

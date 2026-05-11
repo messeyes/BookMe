@@ -23,7 +23,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioEntity> criar(@RequestBody @Valid UsuarioRequest usuarioRequest){
-        UsuarioEntity criado = usuarioService.criar(new Usuario(null, usuarioRequest.getNome(), usuarioRequest.getEmail(), usuarioRequest.getSenha(), null, Instant.now()));
+        UsuarioEntity criado = usuarioService.criar(new Usuario(null, usuarioRequest.getNome(), usuarioRequest.getEmail(), usuarioRequest.getSenha(), usuarioRequest.getCargo(), Instant.now()));
         return ResponseEntity.status(201).body(criado);
     }
 

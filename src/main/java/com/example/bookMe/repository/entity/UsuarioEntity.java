@@ -1,6 +1,8 @@
 package com.example.bookMe.repository.entity;
 
+import com.example.bookMe.domain.CargoEnum;
 import com.example.bookMe.domain.Usuario;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -11,6 +13,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@JsonPropertyOrder({"id", "nome", "email", "senha", "idCargo", "dataCadastro"})
 public class UsuarioEntity {
 
     @Id
@@ -27,15 +30,15 @@ public class UsuarioEntity {
 
     @NonNull
     @Column(nullable = false)
-    private int senha;
+    private String senha;
 
     @NonNull
     @Column(nullable = false)
     private Instant dataCadastro;
 
-    @NonNull
     @Column(nullable = false)
-    private Long idCargo;
+    @Enumerated(EnumType.STRING)
+    private CargoEnum cargo;
 
     public UsuarioEntity(){}
 
@@ -44,7 +47,7 @@ public class UsuarioEntity {
         this.email = usuario.email();
         this.senha = usuario.senha();
         this.dataCadastro = usuario.dataCadastro();
-        this.idCargo = usuario.idCargo();
+        this.cargo = usuario.cargo();
     }
 
 }

@@ -6,7 +6,7 @@ public record Usuario(
         Long id,
         String nome,
         String email,
-        int senha,
-        Long idCargo,
+        String senha,
+        CargoEnum cargo,
         Instant dataCadastro
 ) {}
