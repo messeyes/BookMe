@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,13 +17,13 @@ public class EmprestimoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
-    @Column(nullable = false)
-    private Long idLivro;
+    @ManyToOne
+    @JoinColumn(name = "idLivro", nullable = false)
+    private LivroEntity livro;
 
-    @NonNull
-    @Column(nullable = false)
-    private Long idUsuario;
+    @ManyToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private UsuarioEntity usuario;
 
     @NonNull
     @Column(nullable = false)
@@ -30,9 +31,18 @@ public class EmprestimoEntity {
 
     @NonNull
     @Column(nullable = false)
-    private Instant dataDevolPrevista;
+    private LocalDate dataDevolPrevista;
 
-    @NonNull
-    @Column(nullable = false)
+
+    @Column
     private Instant dataDevolReal;
+
+    public EmprestimoEntity(){}
+
+    public EmprestimoEntity(UsuarioEntity usuario, LivroEntity livro){
+        this.usuario = usuario;
+        this.livro = livro;
+        this.dataEmprestimo = Instant.now();
+        this.dataDevolPrevista = LocalDate.now().plusWeeks(2);
+    }
 }
