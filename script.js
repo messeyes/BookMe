@@ -173,15 +173,27 @@ function filtrarLivros() {
 // ====================
 function mostrarCadastroLivro() {
   document.getElementById("conteudo").innerHTML = `
-    <h1>Cadastrar Livro</h1>
-    <input id="titulo" placeholder="Título do livro">
-    <input id="autor" placeholder="Autor">
-    <input id="isbn" placeholder="ISBN">
-    <input id="quantidadeTotal" type="number" placeholder="Quantidade total">
+    <div class="cabecalho-tela">
+        <h1>Cadastrar Livro</h1>
+    </div>
     
-    <div class="botoes-form">
-        <button onclick="cadastrarLivro()">Salvar livro</button>
-        <button class="btn-cancelar" onclick="mostrarLivros()">Cancelar</button>
+    <div class="card-detalhes">
+        <label>Título do Livro</label>
+        <input id="titulo" placeholder="Ex: O Senhor dos Anéis">
+        
+        <label>Autor</label>
+        <input id="autor" placeholder="Ex: J.R.R. Tolkien">
+        
+        <label>Código ISBN</label>
+        <input id="isbn" placeholder="Ex: 978-85-336-1337-9">
+        
+        <label>Quantidade Total em Estoque</label>
+        <input id="quantidadeTotal" type="number" placeholder="Ex: 5">
+        
+        <div style="display: flex; gap: 15px; margin-top: 30px;">
+            <button class="btn-novo" style="margin-top: 0;" onclick="cadastrarLivro()">Salvar Livro</button>
+            <button class="btn-voltar" onclick="mostrarLivros()">Cancelar</button>
+        </div>
     </div>
   `;
 }
@@ -504,9 +516,16 @@ async function devolverLivro(idEmprestimo) {
 // ====================
 async function mostrarMeusEmprestimos() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
+    if (!dadosSessao) return;
     const usuario = JSON.parse(dadosSessao);
 
-    document.getElementById("conteudo").innerHTML = `<h1>Meus Empréstimos</h1><div id="lista-emp"></div>`;
+    document.getElementById("conteudo").innerHTML = `
+        <div class="cabecalho-tela">
+            <h1>📚 Meus Empréstimos</h1>
+            <button class="btn-voltar" onclick="mostrarPainelUsuario()">Voltar ao Perfil</button>
+        </div>
+        <div id="lista-atividades" class="card-detalhes">Verificando seus empréstimos...</div>
+    `;
 
     try {
         const resposta = await fetch('http://localhost:8080/emprestimos');
@@ -514,18 +533,32 @@ async function mostrarMeusEmprestimos() {
 
         const meus = todos.filter(e => e.usuario.id === usuario.id);
 
-        let html = '<table class="tabela-atividades"><tr><th>Livro</th><th>Devolução</th><th>Ação</th></tr>';
+        if (meus.length === 0) {
+            document.getElementById("lista-atividades").innerHTML = "<p>Você não possui empréstimos no momento.</p>";
+            return;
+        }
+
+        let html = '<div class="container-lista-atividades">';
+        
         meus.forEach(e => {
+            const partes = e.dataDevolPrevista.split('-'); 
+            const dataBr = partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : e.dataDevolPrevista;
+
             html += `
-                <tr>
-                    <td>${e.livro.titulo}</td>
-                    <td>${e.dataDevolPrevista}</td>
-                    <td>${!e.dataDevolReal ? `<button onclick="devolverLivro(${e.id})">Devolver</button>` : 'Entregue'}</td>
-                </tr>`;
+                <div class="card-atividade">
+                    <h3>${e.livro.titulo}</h3> 
+                    <p><b>Devolução Prevista:</b> ${dataBr}</p>
+                    <p><b>Status:</b> <span class="tag-atividade">${!e.dataDevolReal ? 'Pendente' : 'Entregue'}</span></p>
+                    
+                    ${!e.dataDevolReal ? `<button class="btn-voltar" style="margin-top:10px;" onclick="devolverLivro(${e.id})">Devolver Livro</button>` : ''}
+                </div>
+            `;
         });
-        document.getElementById("lista-emp").innerHTML = html + '</table>';
+        html += '</div>';
+        
+        document.getElementById("lista-atividades").innerHTML = html;
     } catch (e) {
-        alert("Erro ao buscar empréstimos.");
+        document.getElementById("lista-atividades").innerHTML = "<p>Erro ao conectar com o banco de dados.</p>";
     }
 }
 
@@ -556,20 +589,24 @@ async function mostrarMinhasReservas() {
             return;
         }
 
-        let html = '<div class="grid-reservas">';
+        let html = '<div class="container-lista-atividades">';
+        
         minhasReservas.forEach(res => {
+            const dataBr = new Date(res.dataReserva).toLocaleDateString('pt-BR');
+
             html += `
-                <div class="item-reserva">
+                <div class="card-atividade">
                     <h3>${res.livro.titulo}</h3> 
-                    <p><b>Data:</b> ${new Date(res.dataReserva).toLocaleDateString('pt-BR')}</p>
+                    <p><b>Data do Pedido:</b> ${dataBr}</p>
                     <p><b>Posição na fila:</b> ${res.ordemFila}º lugar</p>
-                    <p><b>Status:</b> <span class="tag-status">${res.status}</span></p>
+                    <p><b>Status:</b> <span class="tag-atividade">${res.status}</span></p>
                     
-                    ${res.status === 'PENDENTE' ? `<button class="btn-voltar btn-cancelar-reserva" onclick="cancelarReserva(${res.id})">Cancelar Reserva</button>` : ''}
+                    ${res.status === 'PENDENTE' ? `<button class="btn-voltar" style="margin-top:10px;" onclick="cancelarReserva(${res.id})">Cancelar Reserva</button>` : ''}
                 </div>
             `;
         });
         html += '</div>';
+        
         document.getElementById("lista-atividades").innerHTML = html;
     } catch (erro) {
         document.getElementById("lista-atividades").innerHTML = "<p>Erro ao conectar com as reservas.</p>";
