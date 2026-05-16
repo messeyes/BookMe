@@ -1,20 +1,12 @@
-// ====================
-// VARIÁVEL GLOBAL
-// ====================
+
 let livros = []; 
 let paginaAtual = 1;
 
-// ====================
-// INICIALIZAÇÃO 
-// ====================
 window.onload = function() {
     atualizarMenuLateral();
     mostrarHome();
 };
 
-// ====================
-// HOME 
-// ====================
 function mostrarHome() {
   document.getElementById("conteudo").innerHTML = `
     <h1>Bem-vindo à Biblioteca Virtual</h1>
@@ -22,9 +14,7 @@ function mostrarHome() {
   `;
 }
 
-// ====================
-// ATUALIZAR MENU LATERAL
-// ====================
+
 function atualizarMenuLateral() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     const areaPerfil = document.getElementById("perfil-usuario");
@@ -59,9 +49,6 @@ function atualizarMenuLateral() {
     }
 }
 
-/// ====================
-// MOSTRAR LIVROS (GET)
-// ====================
 async function mostrarLivros() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     let btnNovoLivroHTML = "";
@@ -99,9 +86,7 @@ async function mostrarLivros() {
     }
 }
 
-/// ====================
-// RENDERIZAR LIVROS 
-// ====================
+
 function renderizarLivros(lista) {
   const itensPorPagina = window.innerWidth <= 768 ? 6 : 12;
   
@@ -143,17 +128,11 @@ function renderizarLivros(lista) {
   document.getElementById("listaLivros").innerHTML = cards + paginacaoHTML;
 }
 
-// ====================
-// MUDAR PÁGINA
-// ====================
 function mudarPagina(novaPagina) {
     paginaAtual = novaPagina;
     filtrarLivros(); 
 }
 
-// ====================
-// FILTRAR LIVROS (BARRA DE PESQUISA)
-// ====================
 function filtrarLivros() {
     const termo = document.getElementById("buscaLivro").value.toLowerCase();
     
@@ -168,9 +147,6 @@ function filtrarLivros() {
     renderizarLivros(livrosFiltrados);
 }
 
-// ====================
-// CADASTRAR LIVRO (TELA)
-// ====================
 function mostrarCadastroLivro() {
   document.getElementById("conteudo").innerHTML = `
     <div class="cabecalho-tela">
@@ -198,9 +174,6 @@ function mostrarCadastroLivro() {
   `;
 }
 
-// ====================
-// CADASTRAR LIVRO (POST)
-// ====================
 async function cadastrarLivro() {
   const titulo = document.getElementById("titulo").value;
   const autor = document.getElementById("autor").value;
@@ -243,9 +216,6 @@ async function cadastrarLivro() {
   }
 }
 
-// ====================
-// VER DETALHES DO LIVRO
-// ====================
 function mostrarDetalhesLivro(idClicado) {
   const livro = livros.find(l => l.id === idClicado);
   const dadosSessao = localStorage.getItem("usuarioLogado"); 
@@ -288,9 +258,6 @@ function mostrarDetalhesLivro(idClicado) {
   `;
 }
 
-// ====================
-// REALIZAR EMPRÉSTIMO
-// ====================
 async function realizarEmprestimo(idDoLivro) {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     
@@ -327,9 +294,6 @@ async function realizarEmprestimo(idDoLivro) {
     }
 }
 
-// ====================
-// REALIZAR RESERVA
-// ====================
 async function realizarReserva(idDoLivro) {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     
@@ -363,9 +327,6 @@ async function realizarReserva(idDoLivro) {
     }
 }
 
-// ====================
-// TELA DE CADASTRO DE USUÁRIO
-// ====================
 function mostrarCadastroUsuario() {
   document.getElementById("conteudo").innerHTML = `
     <div class="cabecalho-tela">
@@ -400,9 +361,6 @@ function mostrarCadastroUsuario() {
   `;
 }
 
-// ====================
-// CADASTRAR USUÁRIO (POST)
-// ====================
 async function cadastrarUsuario() {
     const nome = document.getElementById("nomeUsuario").value.trim();
     const email = document.getElementById("emailUsuario").value.trim();
@@ -448,9 +406,6 @@ async function cadastrarUsuario() {
     }
 }
 
-// ====================
-// FAZER LOGOUT
-// ====================
 function logout() {
     localStorage.removeItem("usuarioLogado");
     alert("Você saiu da conta!");
@@ -458,10 +413,6 @@ function logout() {
     mostrarCadastroUsuario();
 }
 
-
-// ====================
-// PAINEL DO USUÁRIO 
-// ====================
 async function mostrarPainelUsuario() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     if (!dadosSessao) return mostrarCadastroUsuario();
@@ -511,9 +462,6 @@ async function devolverLivro(idEmprestimo) {
     }
 }
 
-// ====================
-// ABA: MEUS EMPRÉSTIMOS
-// ====================
 async function mostrarMeusEmprestimos() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     if (!dadosSessao) return;
@@ -562,9 +510,6 @@ async function mostrarMeusEmprestimos() {
     }
 }
 
-// ====================
-// ABA: MINHAS RESERVAS
-// ====================
 async function mostrarMinhasReservas() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     if (!dadosSessao) return;
@@ -613,9 +558,6 @@ async function mostrarMinhasReservas() {
     }
 }
 
-// ====================
-// CANCELAR RESERVA
-// ====================
 async function cancelarReserva(idReserva) {
     try {
         const resposta = await fetch(`http://localhost:8080/reservas/${idReserva}/cancelar`, {
@@ -631,9 +573,6 @@ async function cancelarReserva(idReserva) {
     }
 }
 
-// ====================
-// ABA: GERENCIAMENTO DE MULTAS
-// ====================
 async function mostrarMinhasMultas() {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     const usuario = JSON.parse(dadosSessao);
@@ -689,9 +628,6 @@ async function pagarMulta(idMulta) {
     }
 }
 
-// ====================
-// REGRAS DA BIBLIOTECA
-// ====================
 function mostrarRegras() {
   document.getElementById("conteudo").innerHTML = `
     <div class="cabecalho-tela">

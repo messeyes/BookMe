@@ -1,6 +1,4 @@
-/* ====================
-   GERAL
-==================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -14,18 +12,12 @@ body {
     overflow-x: hidden;
 }
 
-/* ====================
-   LAYOUT 
-==================== */
 .app {
     display: flex;
     min-height: 100vh;
     width: 100%;
 }
 
-/* ====================
-   SIDEBAR 
-==================== */
 .sidebar {
     width: 280px;
     background-color: #353b43; 
@@ -118,9 +110,6 @@ body {
     padding-left: 20px; 
 }
 
-/* ====================
-   MAIN
-==================== */
 main {
     flex: 1;
     padding: 40px 50px; 
@@ -159,9 +148,6 @@ main {
     box-shadow: 0 0 0 2px #353b43, 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* ====================
-   FORMULÁRIOS
-==================== */
 label {
     font-weight: 600;
     color: #2c3e50;
@@ -186,9 +172,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(53, 59, 67, 0.1);
 }
 
-/* ====================
-   GRID E CARDS DE LIVROS
-==================== */
 #listaLivros {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -243,9 +226,6 @@ input:focus, select:focus {
     background-color: #1a1d21;
 }
 
-/* ====================
-   TELAS INTERNAS 
-==================== */
 .card-detalhes {
     background: #ffffff;
     padding: 30px;
@@ -254,9 +234,6 @@ input:focus, select:focus {
     border: 1px solid #e1e5ea;
 }
 
-/* ====================
-   PAGINAÇÃO 
-==================== */
 .paginacao {
     grid-column: 1 / -1; 
     width: 100%;         
@@ -289,10 +266,6 @@ input:focus, select:focus {
     color: #adb5bd;
     cursor: not-allowed;
 }
-
-/* ====================
-   BOTÕES GERAIS E EXTRAS
-==================== */
 
 .btn-emprestar {
     background-color: #27ae60; 
@@ -355,16 +328,11 @@ input:focus, select:focus {
 .btn-acao-reservas { background-color: #f39c12; }
 .btn-acao-multas { background-color: #e74c3c; }
 
-/* CELULAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR */
 @media (max-width: 768px) {
     .app { flex-direction: column; }
     .sidebar { width: 100%; height: auto; position: relative; padding: 20px; }
     .main-content { padding: 20px; }
 }
-
-/* ====================
-   LISTAS DE ATIVIDADES (EMPRÉSTIMOS E RESERVAS)
-==================== */
 
 .container-lista-atividades {
     display: flex;
