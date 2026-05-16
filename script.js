@@ -155,16 +155,16 @@ function mostrarCadastroLivro() {
     
     <div class="card-detalhes">
         <label>Título do Livro</label>
-        <input id="titulo" placeholder="Ex: O Senhor dos Anéis">
+        <input id="titulo">
         
         <label>Autor</label>
-        <input id="autor" placeholder="Ex: J.R.R. Tolkien">
+        <input id="autor">
         
         <label>Código ISBN</label>
-        <input id="isbn" placeholder="Ex: 978-85-336-1337-9">
+        <input id="isbn">
         
         <label>Quantidade Total em Estoque</label>
-        <input id="quantidadeTotal" type="number" placeholder="Ex: 5">
+        <input id="quantidadeTotal" type="number">
         
         <div style="display: flex; gap: 15px; margin-top: 30px;">
             <button class="btn-novo" style="margin-top: 0;" onclick="cadastrarLivro()">Salvar Livro</button>
@@ -180,8 +180,13 @@ async function cadastrarLivro() {
   const isbn = document.getElementById("isbn").value;
   const quantidadeTotal = Number(document.getElementById("quantidadeTotal").value);
 
-  if (!titulo || !autor || !isbn || !quantidadeTotal) {
-    alert("Preencha todos os campos!");
+ if (!titulo || !autor || !isbn || !quantidadeTotal) {
+    Swal.fire({
+      title: 'Ops!',
+      text: 'Preencha todos os campos para cadastrar o livro.',
+      icon: 'warning',
+      confirmButtonColor: '#353b43' 
+    });
     return;
   }
 
@@ -204,15 +209,18 @@ async function cadastrarLivro() {
       });
 
       if (resposta.ok) {
-          alert("Livro salvo com sucesso no banco de dados!");
+          Swal.fire({
+            title: 'Cadastrado!',
+            text: 'Livro salvo com sucesso no banco de dados!',
+            icon: 'success',
+            confirmButtonColor: '#27ae60'
+          });
           mostrarLivros(); 
       } else {
-          alert("O servidor recusou o cadastro. Verifique os dados.");
+          Swal.fire('Erro', 'O servidor recusou o cadastro. Verifique os dados.', 'error');
       }
-      
   } catch (erro) {
-      console.error("Erro ao salvar:", erro);
-      alert("Falha na comunicação com o backend.");
+      Swal.fire('Falha na conexão', 'Não foi possível conectar com o backend.', 'error');
   }
 }
 
@@ -221,7 +229,11 @@ function mostrarDetalhesLivro(idClicado) {
   const dadosSessao = localStorage.getItem("usuarioLogado"); 
 
   if (!livro) {
-    alert("Livro não encontrado!");
+      Swal.fire({
+            text: 'Livro não encontrado. Tente novamente.',
+            icon: 'warning',
+            confirmButtonColor: '#ae7f27'
+          });
     return;
   }
 
@@ -262,8 +274,11 @@ async function realizarEmprestimo(idDoLivro) {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     
     if (!dadosSessao) {
-        alert("Você precisa estar logado para pegar um livro!");
-        return;
+        Swal.fire({
+            text: 'Você precisa estar logado para pegar um livro emprestado!',
+            icon: 'warning',
+            confirmButtonColor: '#ae7f27'
+          });
     }
 
     const usuario = JSON.parse(dadosSessao);
@@ -281,24 +296,31 @@ async function realizarEmprestimo(idDoLivro) {
             body: JSON.stringify(pacoteDeDados)
         });
 
-        if (resposta.ok) {
-            alert("Empréstimo realizado com sucesso! Verifique seu perfil.");
-            mostrarLivros(); 
-        } else {
-            const erro = await resposta.text();
-            alert("Erro: " + (erro || "O servidor recusou o empréstimo. Verifique o estoque."));
-        }
-    } catch (erro) {
-        console.error("Erro na conexão:", erro);
-        alert("Não foi possível conectar ao servidor Java.");
-    }
+     if (resposta.ok) {
+          Swal.fire({
+            title: 'Sucesso!',
+            text: 'Empréstimo realizado! Verifique seu perfil',
+            icon: 'success',
+            confirmButtonColor: '#27ae60'
+          });
+          mostrarLivros(); 
+      } else {
+          Swal.fire('Erro', 'O servidor recusou o empréstimo. Verifique o estoque.', 'error');
+      }
+  } catch (erro) {
+      Swal.fire('Falha na conexão', 'Não foi possível conectar ao servidor Java.', 'error');
+  }
 }
 
 async function realizarReserva(idDoLivro) {
     const dadosSessao = localStorage.getItem("usuarioLogado");
     
     if (!dadosSessao) {
-        alert("Você precisa estar logado para reservar um livro!");
+        Swal.fire({
+            text: 'Você precisa estar logado para reservar um livro!',
+            icon: 'warning',
+            confirmButtonColor: '#ae7f27'
+        });
         return;
     }
     const usuario = JSON.parse(dadosSessao);
@@ -316,14 +338,19 @@ async function realizarReserva(idDoLivro) {
         });
 
         if (resposta.ok) {
-            alert("Livro reservado com sucesso! Avisaremos quando chegar.");
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Livro reservado com sucesso! Avisaremos quando chegar.',
+                icon: 'success',
+                confirmButtonColor: '#27ae60'
+            });
             mostrarLivros();
         } else {
-            alert("O servidor recusou a reserva. Verifique se o banco de dados está rodando.");
+            Swal.fire('Erro', 'O servidor recusou a reserva. Verifique se o banco de dados está rodando.', 'error');
         }
     } catch (erro) {
         console.error("Erro ao reservar:", erro);
-        alert("Erro de conexão com o servidor Java.");
+        Swal.fire('Falha na conexão', 'Não foi possível conectar ao servidor Java.', 'error');
     }
 }
 
@@ -336,13 +363,13 @@ function mostrarCadastroUsuario() {
     <div class="card-detalhes" id="card-auth">
         <div id="campos-registro">
             <label>Nome Completo</label>
-            <input id="nomeUsuario" placeholder="Como quer ser chamado?">
+            <input id="nomeUsuario">
             
             <label>E-mail Institucional</label>
-            <input id="emailUsuario" placeholder="seu@email.com">
+            <input id="emailUsuario">
             
             <label>Senha Numérica (Mínimo 4 Digitos)</label>
-            <input id="senhaUsuario" type="password" placeholder="Ex: 1234">
+            <input id="senhaUsuario" type="password">
 
             <label>Tipo de Perfil</label>
             <select id="cargoUsuario">
@@ -368,12 +395,20 @@ async function cadastrarUsuario() {
     const cargo = document.getElementById("cargoUsuario").value;
 
     if (!nome || !email || !senha) {
-        alert("Ops! Todos os campos são obrigatórios.");
+        Swal.fire({
+            text: 'Ops! Todos os campos são obrigatórios.',
+            icon: 'warning',
+            confirmButtonColor: '#ae7f27'
+        });
         return;
     }
 
     if (!email.includes("@") || !email.includes(".")) {
-        alert("Por favor, insira um e-mail válido (ex: nome@email.com)");
+        Swal.fire({
+            text: 'Por favor, insira um e-mail válido (ex: nome@email.com)',
+            icon: 'warning',
+            confirmButtonColor: '#ae7f27'
+        });
         return;
     }
 
@@ -395,20 +430,30 @@ async function cadastrarUsuario() {
             const usuarioCriado = await resposta.json();
             localStorage.setItem("usuarioLogado", JSON.stringify(usuarioCriado));
             
-            alert(`Conta criada com sucesso! Bem-vinda, ${usuarioCriado.nome}`);
+            Swal.fire({
+                title: 'Sucesso!',
+                text: `Conta criada com sucesso! Bem-vinda, ${usuarioCriado.nome}`,
+                icon: 'success',
+                confirmButtonColor: '#27ae60'
+            });
             atualizarMenuLateral();
             mostrarHome();
         } else {
-            alert("Erro no cadastro. Verifique se a senha é um número maior que 4 Digitos.");
+            Swal.fire('Erro', 'Erro no cadastro. Verifique se a senha é um número maior que 4 Digitos.', 'error');
         }
     } catch (erro) {
-        alert("Erro de conexão.");
+        Swal.fire('Falha na conexão', 'Não foi possível conectar ao servidor Java.', 'error');
     }
 }
 
 function logout() {
     localStorage.removeItem("usuarioLogado");
-    alert("Você saiu da conta!");
+    Swal.fire({
+        title: 'Sessão Encerrada',
+        text: 'Você saiu da conta!',
+        icon: 'info',
+        confirmButtonColor: '#27ae60'
+    });
     atualizarMenuLateral();
     mostrarCadastroUsuario();
 }
@@ -454,11 +499,16 @@ async function devolverLivro(idEmprestimo) {
         });
 
         if (resposta.ok) {
-            alert("Livro devolvido com sucesso!");
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Livro devolvido com sucesso!',
+                icon: 'success',
+                confirmButtonColor: '#27ae60'
+            });
             mostrarMeusEmprestimos(); 
         }
     } catch (erro) {
-        alert("Erro ao processar devolução.");
+        Swal.fire('Erro', 'Erro ao processar devolução.', 'error');
     }
 }
 
@@ -565,11 +615,16 @@ async function cancelarReserva(idReserva) {
         });
 
         if (resposta.ok || resposta.status === 204) { 
-            alert("Sua reserva foi cancelada com sucesso!");
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Sua reserva foi cancelada com sucesso!',
+                icon: 'success',
+                confirmButtonColor: '#27ae60'
+            });
             mostrarMinhasReservas(); 
         }
     } catch (erro) {
-        alert("Erro ao tentar cancelar a reserva.");
+        Swal.fire('Erro', 'Erro ao tentar cancelar a reserva.', 'error');
     }
 }
 
@@ -620,11 +675,16 @@ async function pagarMulta(idMulta) {
         });
 
         if (resposta.ok) {
-            alert("Pagamento registrado! Sua conta está regularizada.");
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Pagamento registrado! Sua conta está regularizada.',
+                icon: 'success',
+                confirmButtonColor: '#27ae60'
+            });
             mostrarMinhasMultas();
         }
     } catch (erro) {
-        alert("Erro ao processar pagamento.");
+        Swal.fire('Erro', 'Erro ao processar pagamento.', 'error');
     }
 }
 
