@@ -229,22 +229,26 @@ function mostrarDetalhesLivro(idClicado) {
   const dadosSessao = localStorage.getItem("usuarioLogado"); 
 
   if (!livro) {
-      Swal.fire({
-            text: 'Livro não encontrado. Tente novamente.',
-            icon: 'warning',
-            confirmButtonColor: '#ae7f27'
-          });
+    Swal.fire('Erro', 'Livro não encontrado!', 'error');
     return;
   }
 
   let botoesAcaoHTML = "";
+  let botaoDeletarHTML = "";
 
   if (dadosSessao) {
+      const usuario = JSON.parse(dadosSessao);
+
       if (livro.quantDisponivel > 0) {
           botoesAcaoHTML = `<button class="btn-emprestar" onclick="realizarEmprestimo(${livro.id})">Pegar Emprestado</button>`;
       } else {
           botoesAcaoHTML = `<button class="btn-reservar" onclick="realizarReserva(${livro.id})">Reservar Livro</button>`;
       }
+
+      if (usuario.cargo === "ADMINISTRADOR" || usuario.cargo === "BIBLIOTECARIO") {
+          botaoDeletarHTML = `<button class="btn-deletar" onclick="deletarLivro(${livro.id})">🗑️ Deletar Obra</button>`;
+      }
+
   } else {
       botoesAcaoHTML = `<p class="aviso-login">Faça login ou cadastre-se para realizar empréstimos.</p>`;
   }
@@ -265,9 +269,44 @@ function mostrarDetalhesLivro(idClicado) {
         
         <div class="botoes-acao">
             ${botoesAcaoHTML}
+            ${botaoDeletarHTML} 
         </div>
     </div>
   `;
+}
+
+async function deletarLivro(idLivro) {
+    const confirmacao = await Swal.fire({
+        title: 'Tem certeza?',
+        text: "Essa ação não pode ser desfeita! O livro sumirá do acervo.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c', 
+        cancelButtonColor: '#353b43',  
+        confirmButtonText: 'Sim, deletar!',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (confirmacao.isConfirmed) {
+        try {
+            const resposta = await fetch(`http://localhost:8080/livros/${idLivro}`, {
+                method: 'DELETE'
+            });
+
+            if (resposta.ok || resposta.status === 204) {
+                Swal.fire(
+                    'Deletado!',
+                    'O livro foi removido da biblioteca.',
+                    'success'
+                );
+                mostrarLivros(); 
+            } else {
+                Swal.fire('Ops!', 'Não foi possível apagar. Verifique se existem empréstimos ativos para este livro.', 'error');
+            }
+        } catch (erro) {
+            Swal.fire('Erro de Conexão', 'Não foi possível falar com o servidor Java.', 'error');
+        }
+    }
 }
 
 async function realizarEmprestimo(idDoLivro) {
