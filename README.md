@@ -72,3 +72,17 @@ spring.jpa.show-sql=true
 A API estará disponível em `http://localhost:8080`.
 
 ---
+## 🧠 Sobre o desenvolvimento
+
+Este projeto foi desenvolvido em equipe ao longo de **4 semanas**, com foco no backend. A escolha do Spring Boot, PostgreSQL e demais tecnologias foi intencional — eu queria aprender na prática, não só na teoria.
+
+O maior desafio foi justamente o Spring Boot, que era uma tecnologia nova pra mim. Durante o desenvolvimento, mergulhei de cabeça em conceitos que antes eram só nomes: **annotations**, **injeção de dependência**, tratamento de **exceptions**, uso do **Optional** para evitar NullPointerExceptions e como isso tudo se conecta numa arquitetura em camadas.
+
+Outro aprendizado importante foi o uso do **Postman** para testar os endpoints e entender na prática o que cada **código de status HTTP** significa — o que é um 200, quando lançar um 404, quando usar 400 ou 422. Isso mudou bastante a forma de pensar a API.
+
+No banco de dados, foi onde conceitos acadêmicos viraram código de verdade: relacionamentos entre tabelas, chaves estrangeiras e como o JPA traduz tudo isso em Java.
+
+No geral, foi um projeto que exigiu bastante, mas que consolidou muita coisa que só faz sentido quando você coloca a mão no código.
+
+---
+
