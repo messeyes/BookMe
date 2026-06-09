@@ -1,3 +1,5 @@
+***INSERTS***
+
 -- =========================
 -- USUÁRIOS
 -- =========================
@@ -62,3 +64,19 @@ INSERT INTO multa_entity
 (id_emprestimo, valor, tipo, pago)
 VALUES
 (3, 15.00, 'ATRASO', FALSE);
+
+
+
+***ALTERAÇÕES***
+
+ALTER TABLE usuario_entity ADD COLUMN telefone VARCHAR(15);
+
+ALTER TABLE usuario_entity 
+ALTER COLUMN nome VARCHAR(200);
+
+
+***DELEÇÃO***
+
+  
+ALTER TABLE usuario_entity
+DROP COLUMN telefone;
