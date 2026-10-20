@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: bookme-db
+    environment:
+      POSTGRES_DB: bookme
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - bookme-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d bookme"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  bookme-data:
